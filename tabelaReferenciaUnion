@@ -1,0 +1,20 @@
+%spark.sql
+create or replace temporary view referencia_indices_temp as 
+select pr.dia, 'faturamento' as indice, (pr.value+p.valor) as valor
+from   (
+       select distinct date_format(DTAHORLANCTO, 'yyyy-MM-dd') as dia, value
+       from   periodo_referencia
+    ) as pr
+    left join (
+        select date_format(dtahorlancto, 'yyyy-MM-dd') as dia, sum(venda_valor) as valor
+        from vd_dia_item_vda_L86
+        group by dia
+   ) as p on (p.dia = pr.dia)
+
+union
+select 
+    dia,
+    'chuva' as indice,
+    avg(valor) valor
+from precipitacao 
+group by dia, indice
