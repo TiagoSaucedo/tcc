@@ -1,0 +1,19 @@
+%spark
+import org.apache.spark.ml.{Pipeline, PipelineModel}
+import org.apache.spark.ml.clustering.{KMeans, KMeansModel}
+import org.apache.spark.ml.evaluation.ClusteringEvaluator
+import org.apache.spark.ml.feature.{VectorAssembler, StandardScaler}
+import org.apache.spark.sql.functions.rand
+
+// Configure the first pipeline
+val assembler = new VectorAssembler().setInputCols(Array("faturamento", "chuva")).setOutputCol("raw_features")
+val scaler = new StandardScaler().setInputCol("raw_features").setOutputCol("features").setWithStd(true).setWithMean(false)
+val kmeans = new KMeans().setK(3).setFeaturesCol("features").setMaxIter(35)
+val pipeline = new Pipeline().setStages(Array(assembler, scaler, kmeans))
+
+// Fit the pipeline to training documents.
+val model = pipeline.fit(correlation_df.orderBy($"dia"))
+
+// Make predictions
+val predictions = model.transform(correlation_df)
+predictions.createOrReplaceTempView("correlacao_indice_agrupados")
