@@ -1,0 +1,9 @@
+%spark
+import org.apache.spark.sql._ 
+
+val (minp, maxp) = indice_fatur_df.select(min($"DTAHORLANCTO").cast("bigint"), max($"DTAHORLANCTO".cast("bigint"))).as[(Long, Long)].first
+val step: Long = 24 * 60 * 60// Diariamente
+//val step: Long = 24 * 60 // Hora
+val reference = spark.range((minp / step) * step, ((maxp / step) + 1) * step, step).select($"id".cast("timestamp").alias("DTAHORLANCTO"), lit("0").alias("value").cast("Integer"))
+reference.cache()
+reference.createOrReplaceTempView("periodo_referencia_l67_diasdechuva")
