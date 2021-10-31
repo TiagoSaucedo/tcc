@@ -1,4 +1,4 @@
-%spark
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -58,6 +58,8 @@ def split_data(stock, lookback):
     num_layers = 2
     output_dim = 1
     num_epochs = 100
+
+#LSTM
 
 class LSTM(nn.Module):
     def __init__(self, input_dim, hidden_dim, num_layers, output_dim):
