@@ -1,4 +1,0 @@
-%spark
-val indice_df = sql("select dia, indice, valor from referencia_indices_temp")
-val indicel = indice_df.select("indice").distinct().collect().map(_.get(0).toString)
-val pivoted_resulting_df = indice_df.groupBy("dia").pivot("indice").sum("valor").orderBy("dia").na.fill(0, indicel)
