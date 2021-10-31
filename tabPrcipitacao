@@ -1,8 +1,0 @@
-%spark.sql
-create or replace temporary view precipitacao as 
-select 
-   date_format(datahora, 'yyyy-MM-dd') as dia,
-    indice,
-    precipitacao as valor
-from estatisticas.indice_pluviometrico_cg
-where precipitacao is not null
